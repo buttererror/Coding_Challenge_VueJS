@@ -7,3 +7,13 @@ export const updateTodoList = (state, {todo, index}) => {
    }
    Vue.set(state.todos, todoIndex, todo);
 };
+
+export const updateTodo = (state, {todoKey, props, values}) => {
+   props.forEach((prop, index) => {
+      state.todos[todoKey][prop] = values[index];
+   });
+};
+
+export const removeAllCompleted = (state) => {
+   state.todos = state.todos.filter((todo) => !todo.done);
+};

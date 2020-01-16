@@ -11,7 +11,7 @@
           v-if="todo.status === 'edit'"
           v-model="todo.text"
           autofocus
-          @keyup.enter="todoView.updateTodo(todo, ['status'], ['new'])"
+          @keyup.enter="updateTodo({todoKey, props: ['status'], values: ['new']})"
         />
         <v-checkbox
           title="Mark as completed"
@@ -37,7 +37,7 @@
           v-if="todo.status === 'edit'"
           clickable
           color="success"
-          @click="todoView.updateTodo(todo, ['status'], ['new'])"
+          @click="updateTodo({todoKey, props: ['status'], values: ['new']})"
         >
           mdi-check
         </v-icon>
@@ -48,7 +48,7 @@
             clickable
             color="success"
             class="pa-1"
-            @click="todoView.updateTodo(todo, ['status'], ['edit'])"
+            @click="updateTodo({todoKey, props: ['status'], values: ['edit']})"
           >
             mdi-pencil
           </v-icon>
@@ -57,7 +57,7 @@
             clickable
             color="error"
             class="pa-1"
-            @click="removeTodo"
+            @click="removeTodo({todo: null, index: todoKey})"
           >
             close
           </v-icon>
@@ -72,36 +72,29 @@
 
 <script>
    import VueTypes from 'vue-types'
-   import Todo from '@/Todo';
+   import {mapMutations} from 'vuex';
 
    export default {
-      data() {
-         return {
-            todoView: null
-         }
-      },
       props: {
          todo: VueTypes.object.isRequired,
          todoKey: VueTypes.number.isRequired
       },
-      created() {
-         this.todoView = new Todo(this.todo, this.todoKey);
-      },
       methods: {
-         removeTodo() {
-            this.todoView.removeTodo();
-         }
+         ...mapMutations({
+            removeTodo: 'tasks/updateTodoList',
+            updateTodo: 'tasks/updateTodo'
+         }),
       },
       watch: {
          'todo.done'(done) {
             if (done) {
-               this.todoView.updateTodo(this.todo, ["status", "done"], ["complete", done]);
+               this.updateTodo({todoKey: this.todoKey, props: ["status", "done"], values: ["complete", done]});
             } else {
-               this.todoView.updateTodo(this.todo, ["status", "done"], ["new", done]);
+               this.updateTodo({todoKey: this.todoKey, props: ["status", "done"], values: ["new", done]});
             }
          },
          'todo.text'(text) {
-            this.todoView.updateTodo(this.todo, ["text"], [text]);
+            this.updateTodo({todoKey: this.todoKey, props: ["text"], values: [text]});
          }
       }
    }

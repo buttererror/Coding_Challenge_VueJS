@@ -27,7 +27,7 @@
       <span title="Delete all completed todos">
         <v-icon
           v-if="completedTodos"
-          @click="deleteAllCompleted"
+          @click="removeAllCompleted"
         >
           mdi-delete
         </v-icon>
@@ -49,8 +49,7 @@
 </template>
 
 <script>
-     import {mapState, mapGetters} from 'vuex';
-     import Todo from '@/Todo';
+     import {mapState, mapMutations, mapGetters} from 'vuex';
    export default {
       name: "TodoSummary",
       computed: {
@@ -64,9 +63,9 @@
          })
       },
       methods: {
-         deleteAllCompleted() {
-            Todo.removeAllcompleted(this.todos);
-         }
+         ...mapMutations({
+            removeAllCompleted: 'tasks/removeAllCompleted'
+         })
       }
    }
 </script>

@@ -27,8 +27,7 @@
 import TodoForm from '@/components/todo-form'
 import TodoList from '@/components/todo-list'
 import TodoSummary from "@/components/todo-summary";
-import {mapState} from 'vuex';
-import Todo from '@/Todo';
+import {mapState, mapActions} from 'vuex';
 
 export default {
   name: 'App',
@@ -43,17 +42,25 @@ export default {
     }
   },
    created() {
-      Todo.fetchTodos();
+     this.fetchTodos();
    },
    computed: {
       ...mapState({
          todos: state => state.tasks.todos
       })
    },
+   methods: {
+      ...mapActions({
+         fetchTodos: 'tasks/fetchTodos'
+      }),
+      saveTodos(todos) {
+         localStorage.setItem("todos_storage", JSON.stringify(todos));
+      }
+   },
    watch: {
      todos: {
         handler(todos) {
-           Todo.saveTodos(todos);
+           this.saveTodos(todos);
         },
         deep: true
      }

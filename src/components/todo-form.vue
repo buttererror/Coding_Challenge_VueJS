@@ -24,7 +24,7 @@
 </template>
 
 <script>
-   import Todo from '@/Todo';
+   import {mapMutations} from 'vuex';
 
    export default {
       data() {
@@ -33,10 +33,13 @@
          }
       },
       methods: {
+         ...mapMutations({
+            insertTodo: 'tasks/updateTodoList'
+         }),
          addNewTodo(e) {
             if (e.target.value) {
                let todo = {text: e.target.value, status: "new", done: false};
-               Todo.insertTodo(todo)
+               this.insertTodo({todo});
                this.todoText = null;
             }
          }
