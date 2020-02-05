@@ -39,11 +39,12 @@ export default {
   data () {
     return {
       title: 'Vue Todos',
-       todos: null
+       todos: []
     }
   },
    created() {
       this.todos = Todo.fetch();
+      console.log(this.todos)
    }
 }
 </script>
